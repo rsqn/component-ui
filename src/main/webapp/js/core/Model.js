@@ -1,8 +1,5 @@
 
-#include lib/flat.js
-
 ns("tech.rsqn.core");
-
 
 tech.rsqn.core.Model = function () {
     this.modelData = {};

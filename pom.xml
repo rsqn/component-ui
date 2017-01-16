@@ -77,9 +77,16 @@
         </dependency>
 
         <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-webapp</artifactId>
+            <version>${jettyVersion}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>tech.rsqn</groupId>
             <artifactId>jjst</artifactId>
-            <version>1.0.4</version>
+            <version>1.0.5-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
 

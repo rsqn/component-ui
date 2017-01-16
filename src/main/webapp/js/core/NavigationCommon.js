@@ -4,8 +4,6 @@ tech.rsqn.core.NavigationCommon = function () {
     this.attempts = 0;
 };
 
-extend(tech.rsqn.core.NavigationCommon, tech.rsqn.core.UIComponent);
-
 tech.rsqn.core.NavigationCommon.prototype.registerBase = function (path) {
     page.base(path);
 };
@@ -31,15 +29,15 @@ tech.rsqn.core.NavigationCommon.prototype.scan = function (pkgName, container) {
             Logger.info("Initializing (" + n + ")");
             countUp++;
 
-            ins.initAsync(container).then(function(){
-                countUp--;
-                Logger.debug('init async callback');
-
-                if ( countUp <= 0) {
-                    Logger.debug('countdown complete');
-                    dfd.resolve();
-                }
-            });
+            // ins.initAsync(container).then(function(){
+            //     countUp--;
+            //     Logger.debug('init async callback');
+            //
+            //     if ( countUp <= 0) {
+            //         Logger.debug('countdown complete');
+            //         dfd.resolve();
+            //     }
+            // });
         } else {
             //todo - dont do this thing that i do
             Logger.info("Skipping (" + n + ")");
@@ -65,33 +63,33 @@ tech.rsqn.core.NavigationCommon.prototype.mkNavFn = function (path) {
 tech.rsqn.core.NavigationCommon.prototype.registerPath = function (path, eventName) {
     Logger.info("registerPath " + path);
 
-    page(path, function (ctx, next) {
-            Logger.info("registerPath.navigateTo path (" + path + ") eventName(" + eventName + ") with ctx " + JSON.stringify(ctx));
-            $("body").trigger("nav-clear");
-            if ("*" === path) {
-                Logger.info("Frontend 404 " + ctx.canonicalPath);
-                //ga('send', 'pageview', {
-                //    'page': ctx.canonicalPath,
-                //    'title': eventName
-                //});
-            } else {
-                $("body").trigger("nav-do-" + path, ctx);
-                //ga('send', 'pageview', {
-                //    'page': ctx.canonicalPath,
-                //    'title': eventName
-                //});
-            }
-        }
-    );
+    // page(path, function (ctx, next) {
+    //         Logger.info("registerPath.navigateTo path (" + path + ") eventName(" + eventName + ") with ctx " + JSON.stringify(ctx));
+    //         $("body").trigger("nav-clear");
+    //         if ("*" === path) {
+    //             Logger.info("Frontend 404 " + ctx.canonicalPath);
+    //             //ga('send', 'pageview', {
+    //             //    'page': ctx.canonicalPath,
+    //             //    'title': eventName
+    //             //});
+    //         } else {
+    //             $("body").trigger("nav-do-" + path, ctx);
+    //             //ga('send', 'pageview', {
+    //             //    'page': ctx.canonicalPath,
+    //             //    'title': eventName
+    //             //});
+    //         }
+    //     }
+    // );
 };
 
 tech.rsqn.core.NavigationCommon.prototype.ready = function () {
-    page();
+    // page();
 };
 
 tech.rsqn.core.NavigationCommon.prototype.navigate = function (path) {
     Logger.info("NavigationCommon.navigate (" + path + ")");
-    page(path);
+    // page(path);
 };
 
 //tech.rsqn.core.NavigationCommon.prototype.back = function () {

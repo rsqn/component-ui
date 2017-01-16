@@ -2,7 +2,7 @@ ns("tech.rsqn.ui");
 
 
 tech.rsqn.ui.Page = function () {
-    this.api = new tech.rsqn.api.AbstractApi();
+    // this.api = new tech.rsqn.api.AbstractApi();
 };
 
 extend(tech.rsqn.ui.Page, tech.rsqn.core.UIComponent);

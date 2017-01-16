@@ -9,6 +9,11 @@
         </layout>
     </appender>
 
+
+    <logger name="org.eclipse">
+        <level value="INFO"/>
+    </logger>
+
     <root>
         <priority value="debug" />
         <appender-ref ref="console" />
