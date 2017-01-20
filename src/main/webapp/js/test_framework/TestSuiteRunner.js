@@ -1,26 +1,26 @@
 
-function TestSuite() {
+function TestSuiteRunner() {
     var names = new Array();
     var tests = new Array();
-    Logger.debug('TestSuite Constructor');
+    Logger.debug('TestSuiteRunner Constructor');
     var testConsole;
 
-    TestSuite.prototype.setConsole = function(cs) {
-        Logger.debug("TestSuite Console set");
+    TestSuiteRunner.prototype.setConsole = function(cs) {
+        Logger.debug("TestSuiteRunner Console set");
         testConsole = cs;
     };
 
    /**
      *
      */
-    TestSuite.prototype.registerTest = function(name, testObj) {
-        Logger.debug("TestSuite register test [" + name + "]");
+    TestSuiteRunner.prototype.registerTest = function(name, testObj) {
+        Logger.debug("TestSuiteRunner register test [" + name + "]");
         testConsole.logRegister(name);
         names[names.length] = name;
         tests[tests.length] = testObj;
     };
 
-    TestSuite.prototype.createTestCallBack = function(currentIndex, nextIndex, tests, finalCallBack) {
+    TestSuiteRunner.prototype.createTestCallBack = function(currentIndex, nextIndex, tests, finalCallBack) {
         var self = this;
 
         if ( nextIndex >= tests.length) {
@@ -39,13 +39,13 @@ function TestSuite() {
         };
     };
 
-    TestSuite.prototype.execute = function(callBack) {
-        Logger.debug('TestSuite execute');
+    TestSuiteRunner.prototype.execute = function(callBack) {
+        Logger.debug('TestSuiteRunner execute');
         testConsole.log("Executing Test Suite");
 
         testConsole.logTestSuiteStart(names[0]);
         tests[0].execute(testConsole,this.createTestCallBack(0,1,tests,function(result) {
-            Logger.info("TestSuite final callback " + result.isSuccess());
+            Logger.info("TestSuiteRunner final callback " + result.isSuccess());
             if (result.isSuccess()) {
                 testConsole.log("<font color=green>Test Suite Complete - PASS</font>");
             } else {
@@ -55,6 +55,6 @@ function TestSuite() {
         }));
     };
 }
-// extend(TestSuite, UIObject);
+// extend(TestSuiteRunner, UIObject);
 
 

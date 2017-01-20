@@ -6,7 +6,15 @@
 #include TestCaseResult.js
 #include TestConsole.js
 #include TestResult.js
-#include TestSuite.js
+#include TestSuiteRunner.js
 
+var defaultSuiteRunner = function() {
+    var testConsole = new TestConsole();
+    var suiteRunner = new TestSuiteRunner();
+    Assertions.testConsole = testConsole;
+    testConsole.onReady("#test_console");
+    suiteRunner.setConsole(testConsole);
+    return suiteRunner;
+};
 
 Logger.info("included package: test_framework");

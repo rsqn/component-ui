@@ -1,51 +1,12 @@
 
 function AcceptanceTestDefinition() {
+    this.testCases = new Array();
 };
 
 AcceptanceTestDefinition.globalSuites = {};
 
-AcceptanceTestDefinition.prototype.addTestCase = function(name) {
-    var self = this;
-    if ( ! this.testFunctions) {
-        self.testNames = new Array();
-        self.testFunctions = new Array();
-    }
-    self.testNames[this.testNames.length] = name;
-    self.testFunctions[this.testFunctions.length] = this[name];
-};
-
-AcceptanceTestDefinition.prototype.test = function(testName,fn) {
-    var self = this;
-    var suiteDefinition = AcceptanceTestDefinition.globalSuites[self.suiteName];
-    Logger.info("suiteName " + self.suiteName + " is " + suiteDefinition);
-//    suiteDefinition[testName] = fn;
-//    suiteDefinition.addTestCase(testName);
-    Logger.info("Acceptance Test " + self.suiteName + "." + testName  + " registered");
-};
-
-AcceptanceTestDefinition.prototype.newTestInstance = function() {
-    var self = this;
-    var suite = AcceptanceTestDefinition.globalSuites[self.suiteName];
-    Logger.info("creating new instance of " + self.suiteName + " is " + suite);
-
-    var instance = suite;  // wrong
-    suite[testName] = fn;
-    suite.addTestCase(testName);
-    Logger.info("Acceptance Test " + self.suiteName + "." + testName  + " registered");
-};
-
-AcceptanceTestDefinition.prototype.addToSuite = function(testSuite) {
-    var self = this;
-
-    for ( var n in AcceptanceTestDefinition.globalSuites ) {
-        Logger.info("Adding " + n + " to suite ");
-        var instance = AcceptanceTestDefinition.globalSuites[n].newTestInstance();
-        testSuite.registerTest(n,instance);
-    }
-};
-
 AcceptanceTestDefinition.suite = function(suiteName) {
-    var s = AcceptanceTest.suites[suiteName];
+    var s = AcceptanceTestDefinition.globalSuites[suiteName];
     if ( ! s ) {
         s = new AcceptanceTestDefinition();
         s.suiteName = suiteName;
@@ -54,26 +15,59 @@ AcceptanceTestDefinition.suite = function(suiteName) {
     }
     return s;
 };
-//
-//AcceptanceTest.defTest = function(n,fn) {
-//    var paths = n.split('.');
-//    if ( paths.length != 2) {
-//        Logger.error("Acceptance Test should follow format Suite.TestName only");
-//        return;
-//    }
-//    var suiteName = paths[0];
-//    var testName = paths[1];
-//
-//    var suite = AcceptanceTest.suites[suiteName];
-//
-//    Logger.info("suiteName " + suiteName + " is " + suite);
-//    suite.prototype[testName] = fn;
-//    Logger.info("Acceptance Test  " + n  + " registered");
-//}
 
-//AcceptanceTest.register = function(suite) {
-//    extend(suite,AcceptanceTest);
-//}
-// extend(AcceptanceTest, tech.rsqn.UIComponent);
+AcceptanceTestDefinition.addToSuiteRunner = function(pattern,suiteRunner) {
+    Logger.info("Adding tests matching pattern " + pattern + " to test suite");
 
+    for ( var n in AcceptanceTestDefinition.globalSuites ) {
+        Logger.info("Adding " + n + " to suite ");
+        var instance = AcceptanceTestDefinition.globalSuites[n].newTestInstance();
+        suiteRunner.registerTest(n,instance);
+    }
+};
+
+
+AcceptanceTestDefinition.prototype.addTestCase = function(name,fn) {
+    var self = this;
+
+    var testCase = {
+        name: name,
+        fn: fn
+    };
+
+    self.testCases.push(testCase);
+
+};
+
+AcceptanceTestDefinition.prototype.test = function(testName,fn) {
+    var self = this;
+    Logger.info("suiteName " + self.suiteName + " is " + self);
+    self.addTestCase(testName,fn);
+};
+
+
+AcceptanceTestDefinition.prototype.newTestInstance = function() {
+    var self = this;
+    var suite = AcceptanceTestDefinition.globalSuites[self.suiteName];
+    Logger.info("creating new instance of " + self.suiteName + " is " + suite);
+
+    var testScope = function() {
+
+    };
+    extend(testScope,AcceptanceTest);
+
+    for ( var i = 0 ; i < self.testCases.length; i++) {
+        var testCase = self.testCases[i];
+        testScope.prototype[testCase.name] = testCase.fn;
+    }
+
+    var instance = new testScope();
+
+    for ( var i = 0 ; i < self.testCases.length; i++) {
+        var testCase = self.testCases[i];
+        instance.addTestCase(testCase.name);
+    }
+
+    return instance;
+};
 
