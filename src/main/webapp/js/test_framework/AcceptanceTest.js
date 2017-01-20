@@ -1,135 +1,12 @@
-/**
- * Created by IntelliJ IDEA.
- * User: mandrewes
- * To change this template use File | Settings | File Templates.
- */
-// Constructor
-var AcceptanceTestUtil = new Object();
-
-AcceptanceTestUtil.ajaxRequest = function(requestType, url, postBody, contentType, testConsole, testCallBackFunc, successFunc, errorFunc) {
-    testConsole.log("AJAXRequest - Endpoint: " + url);
-    testConsole.log("AJAXRequest - Request Type: " + requestType);
-
-    try {
-        var parsed = JSON.parse(postBody);
-//        Logger.info("Parsed postBody");
-        testConsole.log("AJAXRequest - Body: <pre>" + JSON.stringify(parsed,null, '&nbsp;') + "</pre>");
-    } catch ( err ) {
-//        Logger.info("Error parsing postBody");
-        testConsole.log("AJAXRequest - Body: " + postBody);
-    }
-
-
-
-    $.ajax({
-        type: requestType,
-        cache: false,
-        url:url,
-        contentType: contentType,
-        data: postBody,
-        success: function(result,jqXHR) {
-            testConsole.log("AJAXResponse (OK) - <pre>" + JSON.stringify(result,null, '&nbsp;') + "</pre>");
-            try {
-                successFunc(result);
-            } catch ( err ) {
-                testCallBackFunc(false);
-            }
-        },
-        error: function(jqXHR, textStatus) {
-            testConsole.log("AJAXResponse (ERROR) - " + jqXHR.responseText);
-            testConsole.log(JSON.stringify(jqXHR));
-            
-            var responseObj = $.parseJSON(jqXHR.responseText);
-
-            try {
-                errorFunc(responseObj, jqXHR);
-            } catch ( err ) {
-                testCallBackFunc(false);
-            }
-        }
-    });
-};
-
-var Assertions = new Object();
-Assertions.arrayHasValue = function(o,v) {
-    if ( $.inArray(v, o) >= 0) {
-        Assertions.testConsole.log("value " + v  + " was found in array " + o);
-        return;
-    }
-    Assertions.testConsole.log("value " + v  + " was not found in array " + o);
-    throw  ("none");
-};
-
-Assertions.arrayHasLength = function(o,len) {
-    if (o.length == len) {
-        Assertions.testConsole.log("Array has correct length of " + len);
-        return;
-    }
-    Assertions.testConsole.log("Array has incorrect length of " + o.length + " expectation was " + len);
-    throw  ("none");
-};
-
-Assertions.objectHasProperty = function(o,name) {
-    if ( o[name]) {
-        Assertions.testConsole.log("Object does have property " + name);
-        return;
-    }
-    Assertions.testConsole.log("Object does not have property " + name);
-    throw  ("none");
-};
-
-Assertions.arrayLengthIsGreaterThan = function(o,len) {
-    if (o.length > len) {
-        Assertions.testConsole.log("Array has correct length of " + len);
-        return;
-    }
-    Assertions.testConsole.log("Array has incorrect length of " + o.length + " expectation was " + len);
-    throw  ("none");
-};
-
-
-Assertions.objectDoesNotHaveProperty = function(o,name) {
-    if (o[name]) {
-        Assertions.testConsole.log("Object does have property " + name);
-        throw  ("none");
-    }
-    if (o[name]=='' ) {
-        Assertions.testConsole.log("Object does have property (but no value) " + name);
-        throw  ("none");
-    }
-    Assertions.testConsole.log("Object does not have property " + name);
-};
-
-Assertions.propertyIsEqualTo = function(o,name,shouldBe) {
-    if ( o[name]) {
-        if ( o[name] == shouldBe) {
-            Assertions.testConsole.log("Object value " + name + " equals " + shouldBe);
-            return;
-        }
-    }
-    Assertions.testConsole.log("Object property " + name + " value " + o[name] + " is not equal to " + shouldBe);
-    throw  ("none");
-};
-
-
 
 function AcceptanceTest() {
-//    var testNames = new Array();
-//    var this.testFunctions = new Array();
+
+};
 
     Logger.debug('AcceptanceTest Constructor');
 
     AcceptanceTest.prototype.execute = function(testConsole, callBack) {
         return "Must Override - Execute";
-    };
-
-    AcceptanceTest.prototype.addTestCase = function(name) {
-        if ( ! this.testFunctions) {
-            this.testNames = new Array();
-            this.testFunctions = new Array();
-        }
-        this.testNames[this.testNames.length] = name;
-        this.testFunctions[this.testFunctions.length] = this[name];
     };
 
     AcceptanceTest.prototype.executeTests = function(testConsole, callBack) {
@@ -185,7 +62,72 @@ function AcceptanceTest() {
     };
 
 
-}
+AcceptanceTest.suites = {};
+
+AcceptanceTest.addTestCase = function(name) {
+    if ( ! this.testFunctions) {
+        this.testNames = new Array();
+        this.testFunctions = new Array();
+    }
+    this.testNames[this.testNames.length] = name;
+    this.testFunctions[this.testFunctions.length] = this[name];
+};
+
+AcceptanceTest.defTest = function(name) {
+    if ( ! this.testFunctions) {
+        this.testNames = new Array();
+        this.testFunctions = new Array();
+    }
+    this.testNames[this.testNames.length] = name;
+    this.testFunctions[this.testFunctions.length] = this[name];
+};
+
+AcceptanceTest.defSuite = function(suiteName) {
+    var s = AcceptanceTest.suites[suiteName];
+    if ( ! s ) {
+        s = function() {
+
+        };
+        extend(s,AcceptanceTest);
+        AcceptanceTest.suites[suiteName] = s;
+
+        s.defTest = function(testName,fn) {
+            var suite = AcceptanceTest.suites[suiteName];
+            Logger.info("suiteName " + suiteName + " is " + suite);
+            suite.prototype[testName] = fn;
+            debugger;
+            s.addTestCase(testName);
+            Logger.info("Acceptance Test " + suiteName + "." + testName  + " registered");
+        }
+
+        s.prototype.execute = function(testConsole, callBack) {
+            this.executeTests(testConsole, callBack);
+        };
+
+        Logger.info("Acceptance Test Suite " + suiteName  + " registered");
+    }
+    return s;
+};
+//
+//AcceptanceTest.defTest = function(n,fn) {
+//    var paths = n.split('.');
+//    if ( paths.length != 2) {
+//        Logger.error("Acceptance Test should follow format Suite.TestName only");
+//        return;
+//    }
+//    var suiteName = paths[0];
+//    var testName = paths[1];
+//
+//    var suite = AcceptanceTest.suites[suiteName];
+//
+//    Logger.info("suiteName " + suiteName + " is " + suite);
+//    suite.prototype[testName] = fn;
+//    Logger.info("Acceptance Test  " + n  + " registered");
+//}
+
+//AcceptanceTest.register = function(suite) {
+//    extend(suite,AcceptanceTest);
+//}
 // extend(AcceptanceTest, tech.rsqn.UIComponent);
 
 

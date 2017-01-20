@@ -144,7 +144,7 @@ function EnquiryTestSuite() {
         );
     };
 }
-extend(EnquiryTestSuite, AcceptanceTest);
+//extend(EnquiryTestSuite, AcceptanceTest);
 
 
 

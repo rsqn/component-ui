@@ -1,9 +1,4 @@
-/**
- * Created by IntelliJ IDEA.
- * User: mandrewes
- * To change this template use File | Settings | File Templates.
- */
-// Constructor
+
 function TestCaseResult() {
     var name;
     var success = false;

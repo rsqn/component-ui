@@ -1,4 +1,7 @@
 
+#include AcceptanceTestUtil.js
+#include Assertions.js
+#include AcceptanceTestDefinition.js
 #include AcceptanceTest.js
 #include TestCaseResult.js
 #include TestConsole.js

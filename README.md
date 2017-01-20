@@ -9,6 +9,4 @@ Lightweight Javascript UI Framework centered around pages, widget, self manageme
 #usage (demo)
 ```
 mvn jetty:run
-
-mvn clean compile exec:java
 ```

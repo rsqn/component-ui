@@ -6,16 +6,17 @@ $(document).ready(function() {
    var testConsole = new TestConsole();
    var suite = new TestSuite();
    Assertions.testConsole = testConsole;
-
    testConsole.onReady("#test_console");
    suite.setConsole(testConsole);
 
-  suite.registerTest('NoOpTestSuite',new NoOpTestSuite());
+    AcceptanceTestDefinition.
+//   scanNamespaceForInstancesWithProperty('tests','butter');
 
-   var callBack = function(result) {
-       Logger.info("Final callback");
-       testConsole.log("All Suites Complete");
-   };
-   suite.execute(callBack);
+//   suite.registerTest('NoOpTestSuite',new NoOpTestSuite());
+//
+//   suite.execute( function(result) {
+//        Logger.info("Final callback");
+//        testConsole.log("All Suites Complete");
+//   });
 
 });

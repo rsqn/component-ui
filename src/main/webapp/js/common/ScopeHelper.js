@@ -33,3 +33,32 @@ function createDelegate(obj, method, args, appendArgs){
         return method.apply(obj || window, callArgs);
     };
 };
+
+ns('tech.rsqn.util');
+
+var scanNamespaceForInstancesWithProperty = function (nsName, propName) {
+    var paths = nsName.split('.');
+    var pkg = window[paths[0]];
+
+    var ret = new Array();
+
+    Logger.info("Scanning namespace (" + nsName + ") for instances with property " + propName + " = true ");
+
+    for ( var i = 1; i < paths.length; i++) {
+        pkg = pkg[paths[i]];
+    }
+
+    for (var c in pkg) {
+        var n = nsName + "." + c;
+        Logger.info("n is " + n);
+
+        var propVal = eval(n + '["' + propName+ '"] === true');
+        if ( propVal === true ) {
+            Logger.info("Found " + n + " with " + propName + " === true");
+//            var componentName = eval(n).componentName;
+//            this.register(componentName,n);
+        }
+    }
+
+    Logger.info("Found " + ret.length + " instances with property " + propName + " === true");
+};

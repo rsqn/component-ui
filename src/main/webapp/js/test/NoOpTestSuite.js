@@ -1,24 +1,36 @@
-/**
- * Created by IntelliJ IDEA.
- * User: mandrewes
- * To change this template use File | Settings | File Templates.
- */
-// Constructor
+var NoOpTestSuite = AcceptanceTestDefinition.suite('NoOpTestSuite');
 
-//@deprecated
-function NoOpTestSuite() {
-
-    NoOpTestSuite.prototype.execute = function (testConsole, callBack) {
-        this.addTestCase("shouldDoNothing");
-        this.executeTests(testConsole, callBack);
-    };
-
-    NoOpTestSuite.prototype.shouldDoNothing = function (testConsole, callBack) {
-        testConsole.log("within shouldRunTestCaseOne");
+NoOpTestSuite.test('shouldDoNothing',
+    function (testConsole, callBack) {
+        testConsole.log("within shouldDoNothing");
         callBack(true);
-    };
-}
-extend(NoOpTestSuite, AcceptanceTest);
+    }
+);
+//
+//AcceptanceTest.defTest('NoOpTestSuite.shouldDoNothing',
+//    function (testConsole, callBack) {
+//      testConsole.log("within shouldDoNothing");
+//      callBack(true);
+//    }
+//);
+
+//
+//tests.NoOpTestSuite = function(){
+//
+//};
+//
+//tests.NoOpTestSuite.prototype.execute = function (testConsole, callBack) {
+//        this.addTestCase("shouldDoNothing");
+//        this.executeTests(testConsole, callBack);
+//    };
+//
+//    tests.NoOpTestSuite.prototype.shouldDoNothing = function (testConsole, callBack) {
+//        testConsole.log("within shouldRunTestCaseOne");
+//        callBack(true);
+//    };
+
+//AcceptanceTest.register(tests.NoOpTestSuite);
+
 
 
 
