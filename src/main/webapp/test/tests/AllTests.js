@@ -1,5 +1,3 @@
-#include NoOpTestSuite.js
-
 Logger.info("All Tests");
 
 $(document).ready(function () {

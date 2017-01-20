@@ -36,10 +36,10 @@ tech.rsqn.ui.dataview.DataWindow.prototype.drawData = function (preCb, postCb) {
     var rowcb = function (rowData) {
         rowData = flatten(rowData);
 
-        rsTemplates.getTemplate("dataview/" + self.templateName + "/row-template.html").then(function (rowTpl) {
+        cuiTemplates.getTemplate("dataview/" + self.templateName + "/row-template.html").then(function (rowTpl) {
             for (var i = 0; i < self.headerSource.headers.length; i++) {
                 var hdrName = i18n(self.headerSource.headers[i]);
-                rsTemplates.getTemplate("dataview/" + self.templateName + "/cell-template.html").then(function (cellTpl) {
+                cuiTemplates.getTemplate("dataview/" + self.templateName + "/cell-template.html").then(function (cellTpl) {
                     self.dataSource.cellRenderer(hdrName, rowData, cellTpl);
                     rowTpl.append(cellTpl);
                 });
@@ -294,10 +294,10 @@ tech.rsqn.ui.dataview.DataView = function (templateName, container) {
  * @param templateName
  */
 tech.rsqn.ui.dataview.DataView.prototype.prefetchTemplates = function (templateName) {
-    rsTemplates.getTemplate("dataview/" + templateName + "/body-template.html");
-    rsTemplates.getTemplate("dataview/" + templateName + "/cell-template.html");
-    rsTemplates.getTemplate("dataview/" + templateName + "/row-template.html");
-    rsTemplates.getTemplate("dataview/" + templateName + "/header-cell-template.html");
+    cuiTemplates.getTemplate("dataview/" + templateName + "/body-template.html");
+    cuiTemplates.getTemplate("dataview/" + templateName + "/cell-template.html");
+    cuiTemplates.getTemplate("dataview/" + templateName + "/row-template.html");
+    cuiTemplates.getTemplate("dataview/" + templateName + "/header-cell-template.html");
 };
 
 /**
@@ -305,7 +305,7 @@ tech.rsqn.ui.dataview.DataView.prototype.prefetchTemplates = function (templateN
  */
 tech.rsqn.ui.dataview.DataView.prototype.init = function (cb) {
     var self = this;
-    rsTemplates.getTemplate("dataview/" + this.templateName + "/body-template.html").then(function (bodyTpl) {
+    cuiTemplates.getTemplate("dataview/" + this.templateName + "/body-template.html").then(function (bodyTpl) {
         self.bodyTpl = bodyTpl;
         self.myContainer.append(self.bodyTpl);
         self.myElement = self.myContainer.find(".dv-wrapper");
@@ -366,7 +366,7 @@ tech.rsqn.ui.dataview.DataView.prototype.renderHeader = function () {
         }
 
         Logger.debug("rendering header " + i + " - " + hdrName);
-        rsTemplates.getTemplate("dataview/" + self.templateName + "/header-cell-template.html").then(function (cellTpl) {
+        cuiTemplates.getTemplate("dataview/" + self.templateName + "/header-cell-template.html").then(function (cellTpl) {
             cellTpl.attr('dv-sort-column', hdrName);
             cellTpl.attr('dv-sort-dir', 'none');
             cellTpl.addClass('dv-sort-column');

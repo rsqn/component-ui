@@ -22,15 +22,15 @@ tech.rsqn.ui.Page.prototype.removeWidgets = function () {
 };
 
 
-tech.rsqn.ui.Page.manufacture = function(pkg,n,navPath,tplPath,optTitle) {
-    Logger.info("Manufacturing page " + pkg + "." + n);
+tech.rsqn.ui.Page.manufacture = function(pkgName,clsName,navPath,tplPath,optTitle) {
+    Logger.info("Manufacturing page " + pkgName + "." + clsName);
 
-    var p = ns(pkg);
+    var pkg = ns(pkgName);
 
     var bake = function() {
-        var cls = p[n] =  function () {
+        var cls = pkg[clsName] =  function () {
             this.attempts = 0;
-            this.name = n;
+            this.name = clsName;
             this.path = navPath;
             if ( optTitle ) {
                 this.title = optTitle;
@@ -42,7 +42,7 @@ tech.rsqn.ui.Page.manufacture = function(pkg,n,navPath,tplPath,optTitle) {
         cls.prototype.init = function(container) {
             var self = this;
             this.initTemplate(container, tplPath);
-            Logger.info( n + " initialized");
+            Logger.info( clsName + " initialized");
 
             var navIn = function (ctx) {
                 self.myElement.show();
@@ -59,9 +59,11 @@ tech.rsqn.ui.Page.manufacture = function(pkg,n,navPath,tplPath,optTitle) {
 
             this.bindNavigationListeners(this.name, this.path, navIn, navOut, onLoad);
         };
+
+        return cls;
     };
 
-    bake();
+    return bake();
 
 };
 

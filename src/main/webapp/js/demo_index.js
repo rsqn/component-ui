@@ -2,6 +2,8 @@
 #include index.js
 
 #ifprofile test
-#include test_framework/_index.js
-#include test/_index.js
+#include ../test/framework/_index.js
+
+#include ../test/testconstants.js
+#include ../test/tests/_index.js
 #endif

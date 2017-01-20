@@ -12,6 +12,7 @@ function ns(namespaceString) {
     return parent;
 }
 
+
 function extend(subclass, superclass) {
     subclass.prototype = new superclass;
     subclass.prototype.constructor = subclass;

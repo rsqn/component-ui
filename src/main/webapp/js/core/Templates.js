@@ -1,73 +1,66 @@
 ns("tech.rsqn.core");
 
-
+/*
+ Accessing templates asynchronously just created glue code - in practice its much nicer to use templates if they return synchronously
+ */
 tech.rsqn.core.Templates = function () {
     this.templates = {};
-    this.templates_requested = {}; //debounce for gettemplate
     this.enableCache = true;
     this.enableTags = true;
 };
 
-tech.rsqn.core.Templates.prototype.getTemplate = function (templateName, forceLoad) {
-    var dfd = $.Deferred();
+
+tech.rsqn.core.Templates.prototype.init = function (config, cb) {
     var self = this;
-    var waitMs = 100;
+    var cdl = new tech.rsqn.common.CountDownLatch(config.length, function () {
+        for (var n in self.templates) {
+            Logger.info("Template registered (" + n + ")");
+        }
+        cb();
+    });
+
+    for (var i = 0; i < config.length; i++) {
+        var tn = config[i];
+
+        self.loadTemplate(config[i], function (err, tpl) {
+            if ( err ) {
+                self.templates[tn] = err;
+            } else {
+                self.templates[tn] = tpl;
+            }
+            cdl.countDown();
+        });
+    }
+
+};
+
+tech.rsqn.core.Templates.prototype.getTemplate = function (templateName) {
+    var self = this;
 
     if (self.templates.hasOwnProperty(templateName)) {
-        //Logger.debug("Returning Cached Template " + templateName);
+        Logger.debug("Returning Cached Template " + templateName);
         var ret = $(self.templates[templateName]);
         if (self.enableTags == true) {
             self.replaceTags(ret)
         }
-        dfd.resolve(ret);
+        return ret;
     } else {
-        //Logger.debug("Not in cache [ " + templateName  + "]");
-
-        // small for first load of data cells
-        if ( self.templates_requested.hasOwnProperty(templateName) && (! forceLoad === true ) ) {
-            setTimeout(function(){
-                self.getTemplate(templateName).then(function(tpl){
-                    dfd.resolve(tpl,true);
-                });
-            }, waitMs);
-            return dfd;
-        }
-
-        self.templates_requested[templateName] = true;
-        self.loadTemplate(templateName).then(function(template){
-            if (self.enableCache) {
-                self.templates[templateName] = template;
-                Logger.debug("Cached template [" + templateName + "]");
-            }
-            var ret = $(template);
-            if (self.enableTags == true) {
-                self.replaceTags(ret)
-            }
-            dfd.resolve(ret);
-        });
+        Logger.debug("Not in cache [ " + templateName + "]");
+        return $("<p>Template " + templateName + " not found</p>");
     }
-    return dfd;
 };
 
 tech.rsqn.core.Templates.prototype.replaceTags = function (tpl) {
-
     tpl.find(".i18n").each(function (i, e) {
         var elm = $(e);
         elm.html(i18n(elm.attr("data-i18n")));
     });
-
-    tpl.find(".q-pop").each(function (i, e) {
-        var elm = $(e);
-        elm.html(Qpop(elm, elm.attr("data-qpop")));
-    });
 };
 
-tech.rsqn.core.Templates.prototype.loadTemplate = function (templateName) {
+tech.rsqn.core.Templates.prototype.loadTemplate = function (templateName, cb) {
     var uri = constants.contextPath + '/templates/' + templateName;
 
     Logger.info("Loading template " + templateName + " from " + uri);
-
-    var dfd = $.Deferred();
 
     $.ajax({
             type: "GET",
@@ -75,14 +68,12 @@ tech.rsqn.core.Templates.prototype.loadTemplate = function (templateName) {
             url: uri
         }
     ).done(function (data, textStatus, jqXHR) {
-            dfd.resolve(data);
-        })
+        console.log("ok")
+        cb(null, data);
+    })
         .fail(function (jqXHR, textStatus, errorThrown) {
-            dfd.reject(jqXHR);
+            cb(new Error(jqXHR), null);
         });
-
-    return dfd;
-
 };
 
-var rsTemplates = new tech.rsqn.core.Templates();
+var cuiTemplates = new tech.rsqn.core.Templates();

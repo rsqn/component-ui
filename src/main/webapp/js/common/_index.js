@@ -7,5 +7,6 @@
 #include ComponentRegistry.js
 #include DateUtil.js
 #include Navigation.js
+#include AsyncHelpers.js
 #include UnitsHelper.js
 #include i18n.js

@@ -29,6 +29,15 @@ function TestConsole() {
         this.blot("<font color=gray>--" + s + "</font><br/>");
     };
 
+    TestConsole.prototype.div = function(id) {
+        var ret = $("<div></div>");
+        ret.attr('id',id);
+
+        this.blot(ret);
+
+        return ret;
+    };
+
     TestConsole.prototype.logRegister = function(s) {
         this.blot("<b>[test registered] </b>" + s + "<br/>");
     };

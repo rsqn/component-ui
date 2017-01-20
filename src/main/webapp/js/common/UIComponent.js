@@ -5,7 +5,6 @@ var _UIComponentSeq = 0; //todo - fix this 100% reliable hack
 tech.rsqn.core.UIComponent = function () {
     this.isWidget = false;
     this.model = new tech.rsqn.core.Model();
-    this.components = {};
     this.seq = 0;
 };
 
@@ -19,7 +18,7 @@ tech.rsqn.core.UIComponent.prototype.getId = function () {
 
 tech.rsqn.core.UIComponent.prototype.initTemplate = function (container, templateName) {
     this.container = container;
-    this.myElement = rsTemplates.getTemplate(templateName);
+    this.myElement = cuiTemplates.getTemplate(templateName);
     this.__initComponents();
 };
 
