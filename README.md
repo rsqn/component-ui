@@ -25,12 +25,18 @@ mvn jetty:run
 3. apply overrides
 ```
 
-#How do I make a home page
+#How do I make Home Pages
 
-#How do I make new pages
+#How do I make Pages
 
 #How do I make widgets
 
 #How to I perform navigation
 
+#How do I deep link
+
 #How to I do unit test
+
+#How do I customise
+
+#How do I use models
